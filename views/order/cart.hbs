@@ -11,9 +11,9 @@
     <div class="container py-4">
         <nav class="navbar navbar-expand navbar-dark bg-dark rounded mb-4">
             <div class="navbar-nav">
-                <a class="nav-link" th:href="@{'/products'}">전체 상품</a>
-                <a class="nav-link" th:href="@{'/cart'}">장바구니</a>
-                <a class="nav-link" th:href="@{'/orders'}">주문내역</a>
+                <a class="nav-link" href="{{'/products'}}">전체 상품</a>
+                <a class="nav-link" href="{{'/cart'}}">장바구니</a>
+                <a class="nav-link" href="{{'/orders'}}">주문내역</a>
             </div>
         </nav>
 
@@ -30,29 +30,28 @@
             <tbody>
                 {{#if items.length}}
                     {{#each items}}
-                        <tr>
-                            <td>{{ item.product.name}}</td>
-                            <td>{{ item.quantity}}</td>
-                            {{!-- <td>{{ #numbers.for}}</td> --}}
-                        </tr>
+                    <tr>
+                        <td>{{ this.product.name }}</td>
+                        <td>{{ this.quantity }}</td>
+                        <td>{{ this.price }} 원</td>
+                    </tr>
                     {{/each}}
                 {{/if}}
-                <tr th:each="item : ${items}">
-                    <td th:text="${item.product.name}"></td>
-                    <td th:text="${item.quantity}"></td>
-                    <td th:text="${#numbers.formatInteger(item.price, 3, 'COMMA')} + ' 원'"></td>
-                </tr>
-                <tr th:if="${items.size()} == 0">
+                {{#unless items.length}}
                     <td colspan="3" class="text-center">장바구니가 비어 있습니다.</td>
-                </tr>
+                {{/unless }}
             </tbody>
         </table>
 
         <div class="mt-3">
-            <a th:if="${items.size()} > 0" class="btn btn-primary" th:href="@{'/order/checkout'}">주문하기</a>
+            {{#if items.length}}
+            <a class="btn btn-primary" href="{{'/order/checkout'}}">주문하기</a>
+            {{/if}}
         </div>
 
-        <div th:if="${errorMessage}" class="alert alert-danger mt-3" th:text="${errorMessage}"></div>
+        {{#if errorMessage}}
+        <div th:if="${errorMessage}" class="alert alert-danger mt-3" text="{{errorMessage}}"></div>
+        {{/if}}
     </div>
 </body>
 

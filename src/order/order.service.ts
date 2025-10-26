@@ -6,6 +6,14 @@ export class OrderService {
     throw new Error('Method not implemented.');
   }
   getCartItems() {
-    throw new Error('Method not implemented.');
+    return [
+      {
+        product: {
+          name: "아이템"
+        },
+        quantity: 12,
+        price: 1000,
+      },
+    ]
   }
 }
