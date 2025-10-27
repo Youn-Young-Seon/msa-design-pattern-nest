@@ -8,6 +8,6 @@ async function bootstrap() {
   app.setBaseViewsDir('views');
   app.setViewEngine('hbs');
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 1337);
 }
 bootstrap();
