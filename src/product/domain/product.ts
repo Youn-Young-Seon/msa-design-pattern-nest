@@ -6,25 +6,31 @@ import { OrderItem } from "src/order/domain/order-item";
 @Entity('products')
 export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
-    private id: number;
+    id: number;
     @Column()
-    private name: string;
-    private category: Category;
+    name: string;
+    @Column({
+        type: "enum",
+        enum: Category,
+    })
+    category: Category;
     @Column()
-    private manufacturer: string;
+    manufacturer: string;
     @Column()
-    private price: number;
+    price: number;
     @Column()
-    private stock: number;
-    @Column()
-    private imageUrl?: string;
+    stock: number;
+    @Column({
+        nullable: true,
+    })
+    imageUrl?: string;
     @OneToMany(
         () => OrderItem,
         item => item.product
     )
     items: OrderItem[];
 
-    constructor(name: string, category: Category, manufacturer: string, price: number, stock: number, imageUrl: string) {
+    constructor(name: string, category: Category, manufacturer: string, price: number, stock: number, imageUrl?: string) {
         super();
         this.name = name;
         this.category = category;

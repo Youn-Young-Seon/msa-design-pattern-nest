@@ -5,7 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 @Entity('orderitems')
 export class OrderItem {
     @PrimaryGeneratedColumn()
-    private id: number;
+    id: number;
     @ManyToOne(() => Order, order => order.items)
     @JoinColumn({ name: 'order_id' })
     order: Order;
@@ -13,9 +13,9 @@ export class OrderItem {
     @JoinColumn({ name: 'product_id' })
     product: Product;
     @Column()
-    private quantity: number;
+    quantity: number;
     @Column()
-    private price: number;
+    price: number;
   
     constructor(product: Product, quantity: number, price: number) {
         this.product = product;

@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Render } from '@nestjs/common';
+import { Controller, Get, Query, Redirect, Render } from '@nestjs/common';
 import { OrderService } from 'src/order/order.service';
 
 @Controller('cart')
@@ -15,8 +15,8 @@ export class CartController {
   }
 
   @Get('add')
-  @Render('redirect:/cart')
-  addToCart(@Query() productId: number) {
-    this.orderService.addToCart(productId, 1);    
+  @Redirect('/cart')
+  async addToCart(@Query() productId: number) {
+    return await this.orderService.addToCart(productId, 1);    
   }
 }
