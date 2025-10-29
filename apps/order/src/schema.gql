@@ -2,13 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Order {
-  orderId: ID!
-  userId: ID!
-  productId: String!
-  qty: Int!
+type OrderEntity {
+  id: ID!
+  productId: ID!
+  qty: Float!
   unitPrice: Int!
   totalPrice: Int!
+  userId: Int!
+  orderId: String!
   createdAt: DateTime!
 }
 
@@ -18,5 +19,5 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
-  ordersByUser(userId: String!): [Order!]!
+  ordersByUser(userId: String!): [OrderEntity!]!
 }

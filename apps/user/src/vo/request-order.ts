@@ -1,4 +1,4 @@
-export class RequestOrder {
+export class RequestOrder { 
     productId: string;
     qty: number;
     unitPrice: number;

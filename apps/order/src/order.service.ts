@@ -1,40 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Order } from './domain/order';
+import { OrderEntity } from './domain/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDto } from './dto/order.dto';
 import { randomUUID } from 'crypto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class OrderService {
+  private readonly logger = new Logger(OrderService.name);
+
   constructor(
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
+    @InjectRepository(OrderEntity)
+    private readonly orderRepository: Repository<OrderEntity>
   ) { }
 
   async createOrder(orderDto: OrderDto) {
-    orderDto.orderId = randomUUID();
-    orderDto.totalPrice = orderDto.qty * orderDto.unitPrice;
+    orderDto.orderId = randomUUID().toString();
+    orderDto.totalPrice = (orderDto.qty * orderDto.unitPrice);
 
-    const order: Order = orderDto.toEntity();
-    this.orderRepository.save(order);
+    const orderEntity = plainToClass(OrderEntity, orderDto);
+    this.logger.log(`orderEntity: ${JSON.stringify(orderEntity)}`);
+    await this.orderRepository.save(orderEntity);
 
-    const returnValue = order.toDto();
-
-    return returnValue;
+    return plainToClass(OrderDto, orderEntity);
   }
 
   async getOrderByOrderId(orderId: string) {
-    const order = await this.orderRepository.findOneBy({
-      orderId: parseInt(orderId)
-    });
-
-    return order?.toDto();
+    const orderEntity = await this.orderRepository.findOneBy({ orderId });
+    
+    if (!orderEntity) {
+      throw new Error('Order not found');
+    }
+    
+    return plainToClass(OrderDto, orderEntity);
   }
 
   async getOrdersByUserId(userId: string) {
-    return await this.orderRepository.findBy({
-      userId: parseInt(userId)
-    });
+    return await this.orderRepository.findBy({ userId });
   }
 }
