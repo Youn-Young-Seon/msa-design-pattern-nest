@@ -6,10 +6,13 @@ import { UserEntity } from './domain/user.entity';
 import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { BearerTokenMiddleware } from './middleware/bearer-token.middleware';
-import { UserGuard } from './guard/user.guard';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env', 'apps/user/.env']
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -22,18 +25,18 @@ import { UserGuard } from './guard/user.guard';
     }),
     TypeOrmModule.forFeature([UserEntity]),
     HttpModule,
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.TOKEN_SECRET
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('TOKEN_SECRET'),
+      })
     })
   ],
   controllers: [UserController],
   providers: [
-    UserService,
-    {
-      provide: 'APP_GUARD',
-      useClass: UserGuard
-    }
+    UserService
   ],
 })
 export class UserModule implements NestModule {

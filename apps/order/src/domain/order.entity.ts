@@ -1,6 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { OrderDto } from "../dto/order.dto";
-import { ResponseOrder } from "../vo/response-order";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('orders')
 export class OrderEntity {
@@ -26,27 +24,6 @@ export class OrderEntity {
      orderId: string;
 
      @Column({ nullable: false, update: false, insert: false })
+     @CreateDateColumn()
      createdAt: Date;
-
-     toDto() {
-        const orderDto = new OrderDto();
-        orderDto.productId = this.productId;
-        orderDto.qty = this.qty;
-        orderDto.unitPrice = this.unitPrice;
-        orderDto.totalPrice = this.totalPrice;
-        orderDto.userId = this.userId;
-        orderDto.orderId = this.orderId;
-        return orderDto;
-     }
-
-     toResponse() {
-         const responseOrder = new ResponseOrder();
-         responseOrder.productId = this.productId;
-         responseOrder.qty = this.qty; 
-         responseOrder.unitPrice = this.unitPrice;
-         responseOrder.totalPrice = this.totalPrice;
-         responseOrder.orderId = this.orderId;
-         responseOrder.createdAt = new Date(Date.now());
-         return responseOrder;
-     }
 }

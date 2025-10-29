@@ -1,4 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { UserDto } from "../dto/user.dto";
+import { ResponseUser } from "../vo/response-user";
 
 @Entity('users')
 export class UserEntity {

@@ -3,6 +3,9 @@ import { OrderService } from './order.service';
 import { RequestOrder } from './vo/request-order';
 import { randomUUID } from 'crypto';
 import { OrderEntity } from './domain/order.entity';
+import { plainToClass } from 'class-transformer';
+import { OrderDto } from './dto/order.dto';
+import { ResponseOrder } from './vo/response-order';
 
 @Controller()
 export class OrderController {
@@ -16,9 +19,9 @@ export class OrderController {
   async createOrder(@Param('userId') userId: string, @Body() orderDetails: RequestOrder) {
     this.logger.log('Before add orders data');
 
-    const orderDto = orderDetails.toDto();
+    const orderDto = plainToClass(OrderDto, orderDetails);
     orderDto.userId = userId;
-    orderDto.orderId = randomUUID.toString();
+    orderDto.orderId = randomUUID().toString();
     orderDto.totalPrice = (orderDto.qty * orderDto.unitPrice);
 
     const createdOrder = await this.orderService.createOrder(orderDto);
@@ -26,7 +29,7 @@ export class OrderController {
     this.logger.log('After add orders data');
     return {
       code: HttpStatus.CREATED,
-      data: createdOrder.toResponse()
+      data: plainToClass(ResponseOrder, createdOrder)
     }
   }
 
@@ -35,9 +38,10 @@ export class OrderController {
     this.logger.log('Before add orders data');
 
     const orderList: OrderEntity[] = await this.orderService.getOrdersByUserId(userId);
-    const result = orderList.map(orderEntity => orderEntity.toResponse());
+    const result = orderList.map(orderEntity => plainToClass(OrderDto, orderEntity));
 
     this.logger.log('After add orders data');
+
     return {
       code: HttpStatus.OK,
       data: result
