@@ -13,7 +13,6 @@ export class UserController {
 
   constructor(
     private readonly userService: UserService,
-    private readonly orderClient: UserClientService
   ) { }
 
   @Post('users')

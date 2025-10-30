@@ -9,6 +9,7 @@ import { HttpModule } from '@nestjs/axios';
 import { BearerTokenMiddleware } from './middleware/bearer-token.middleware';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { UserClientService } from './grpc/user-client.service';
 
 @Module({
   imports: [
@@ -49,7 +50,10 @@ import { join } from 'path';
       isGlobal: true
     })
   ],
-  controllers: [UserController],
+  controllers: [
+    UserController,
+    UserClientService
+  ],
   providers: [
     UserService
   ],
