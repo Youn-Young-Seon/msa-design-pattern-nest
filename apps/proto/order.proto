@@ -1,0 +1,20 @@
+syntax = "proto3"
+
+package order;
+
+service OrderService {
+    rpc GetOrders (OrderDto) returns (OrderEntity);
+}
+
+message OrderDto {
+    string userId = 1;
+}    
+
+message OrderEntity {
+    string productId = 1;
+    int32 qty = 2;
+    int32 unitPrice = 3;
+    int32 totalPrice = 4;
+    string createdAt = 5;
+    string updatedAt = 6 ;
+}
