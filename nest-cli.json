@@ -15,9 +15,7 @@
       "entryFile": "main",
       "sourceRoot": "apps/order/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/order/tsconfig.app.json",
-        "assets": ["**/*.proto"],
-        "watchAssets": true
+        "tsConfigPath": "apps/order/tsconfig.app.json"
       }
     },
     "user": {
@@ -26,9 +24,7 @@
       "entryFile": "main",
       "sourceRoot": "apps/user/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/user/tsconfig.app.json",
-        "assets": ["**/*.proto"],
-        "watchAssets": true
+        "tsConfigPath": "apps/user/tsconfig.app.json"
       }
     }
   }
