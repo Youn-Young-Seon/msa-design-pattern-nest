@@ -5,7 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { ResponseUser } from './vo/response-user';
 import { UserDto } from './dto/user.dto';
 import { UserGuard } from './guard/user.guard';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { OrderMicroservice } from '@app/common/grpc/proto';
 import { ORDER_SERVICE_NAME } from '@app/common/grpc/proto/order';
 import { ResponseOrder } from './vo/response-order';
@@ -27,31 +27,32 @@ export class UserController implements OnModuleInit {
   }
 
   @Post('users')
+  @GrpcMethod('UserService', 'CreateUser')
   async createUser(@Body() user: RequestUser) {
     const userDto = plainToClass(UserDto, user);
     await this.userService.createUser(userDto);
 
-    const responseUser = plainToClass(ResponseUser, userDto);
+    const responseUser: ResponseUser = plainToClass(ResponseUser, userDto);
     return {
-      code: HttpStatus.CREATED,
       data: responseUser
     }
   }
 
   @Get('users')
   @UseGuards(UserGuard)
+  @GrpcMethod('UserService', 'GetUsers')
   async getUsers() {
     const userList = await this.userService.getUserByAll();
     const result = userList.map(user => plainToClass(ResponseUser, user));
 
     return {
-      code: HttpStatus.OK,
       data: result
     }
   }
 
   @Get('users/:userId')
   @UseGuards(UserGuard)
+  @GrpcMethod('UserService', 'GetUser')
   async getUser(@Param('userId') userId: string) {
     
     const userDto = await this.userService.getUserByUserId(userId);
@@ -62,8 +63,6 @@ export class UserController implements OnModuleInit {
 
     if (!userDto) {
       return {
-        code: HttpStatus.NOT_FOUND,
-        message: 'User not found',
         data: null
       }
     }
@@ -71,7 +70,6 @@ export class UserController implements OnModuleInit {
     const returnValue = plainToClass(ResponseUser, userDto);
 
     return {
-      code: HttpStatus.OK,
       data: returnValue
     }
   }
