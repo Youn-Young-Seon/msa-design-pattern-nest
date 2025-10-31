@@ -1,0 +1,1 @@
+export * as OrderMicroservice from './order';

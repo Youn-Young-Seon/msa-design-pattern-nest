@@ -9,7 +9,7 @@ import { HttpModule } from '@nestjs/axios';
 import { BearerTokenMiddleware } from './middleware/bearer-token.middleware';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { UserClientService } from './grpc/user-client.service';
+import { ORDER_SERVICE_NAME } from '@app/common/grpc/proto/order';
 
 @Module({
   imports: [
@@ -36,23 +36,20 @@ import { UserClientService } from './grpc/user-client.service';
         secret: configService.get<string>('TOKEN_SECRET'),
       })
     }),
-    ClientsModule.register({
-      clients: [
-        {
-          name: 'ORDER_SERVICE',
-          transport: Transport.GRPC,
-          options: {
-            package: 'order',
-            protoPath: join(process.cwd(), 'apps', 'proto', 'order.proto'),
-          }
+    ClientsModule.register([
+      {
+        name: ORDER_SERVICE_NAME,
+        transport: Transport.GRPC,
+        options: {
+          package: 'order',
+          protoPath: join(process.cwd(), 'proto', 'order.proto'),
+          url: '127.0.0.1:1337',
         }
-      ],
-      isGlobal: true
-    })
+      }
+    ])
   ],
   controllers: [
-    UserController,
-    UserClientService
+    UserController
   ],
   providers: [
     UserService

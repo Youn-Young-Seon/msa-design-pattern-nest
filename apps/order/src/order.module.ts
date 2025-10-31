@@ -3,7 +3,6 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderEntity } from './domain/order.entity';
-import { OrderGrpcService } from './grpc/order-grpc.service';
 
 @Module({
   imports: [
@@ -21,7 +20,7 @@ import { OrderGrpcService } from './grpc/order-grpc.service';
       OrderEntity
     ])
   ],
-  controllers: [OrderController, OrderGrpcService],
+  controllers: [OrderController],
   providers: [OrderService],
 })
 export class OrderModule {}

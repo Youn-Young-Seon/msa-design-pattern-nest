@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UserDto } from './dto/user.dto';
 import { randomUUID } from 'crypto';
 import { plainToClass } from 'class-transformer';
-import { firstValueFrom } from 'rxjs';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -17,7 +16,6 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly httpService: HttpService,
     private readonly jwtService: JwtService
   ) { }
 
@@ -38,13 +36,13 @@ export class UserService {
       throw new BadRequestException('User not found');
     }
 
-    this.logger.log('Before call orders microservice');
-    const orderUrl: string = `http://127.0.0.1:1337/${userId}/orders`;
-    const orderListResponse = await firstValueFrom(this.httpService.get(orderUrl));
-    const ordersList = orderListResponse.data.data;
+    // this.logger.log('Before call orders microservice');
+    // const orderUrl: string = `http://127.0.0.1:1337/${userId}/orders`;
+    // const orderListResponse = await firstValueFrom(this.httpService.get(orderUrl));
+    // const ordersList = orderListResponse.data.data;
 
     const userDto = plainToClass(UserDto, userEntity);
-    userDto.orders = ordersList;
+    // userDto.orders = ordersList;
 
     return userDto;
   }

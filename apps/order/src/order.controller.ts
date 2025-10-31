@@ -6,6 +6,7 @@ import { randomUUID } from 'crypto';
 import { OrderDto } from './dto/order.dto';
 import { ResponseOrder } from './vo/response-order';
 import { OrderEntity } from './domain/order.entity';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @Controller()
 export class OrderController {
@@ -15,9 +16,10 @@ export class OrderController {
     private readonly orderService: OrderService
   ) {}
 
-  @Post(':userId/orders')
+  // @Post(':userId/orders')
+  @GrpcMethod('OrderService', 'CreateOrder')
   async createOrder(@Param('userId') userId: string, @Body() orderDetails: RequestOrder) {
-    this.logger.log('Before add orders data');
+    this.logger.log('Before add orders data');    
 
     const orderDto = plainToClass(OrderDto, orderDetails);
     orderDto.userId = userId;
@@ -27,25 +29,30 @@ export class OrderController {
     const createdOrder = await this.orderService.createOrder(orderDto);
 
     this.logger.log('After add orders data');
-    return {
-      code: HttpStatus.CREATED,
-      data: plainToClass(ResponseOrder, createdOrder)
-    }
+    // return {
+    //   code: HttpStatus.CREATED,
+    //   data: plainToClass(ResponseOrder, createdOrder)
+    // }
+    return plainToClass(ResponseOrder, createdOrder);
   }
 
-  @Get(':userId/orders')
+  // @Get(':userId/orders')
+  @GrpcMethod('OrderService', 'GetOrders')
   async getOrder(@Param('userId') userId: string) {
     this.logger.log('Before add orders data');
 
     const orderList: OrderEntity[] = await this.orderService.getOrdersByUserId(userId);
     const result = orderList.map(orderEntity => plainToClass(OrderDto, orderEntity));
 
+    this.logger.log(`userId: ${userId}, orderDetails: ${JSON.stringify(result)}`);
+
     this.logger.log('After add orders data');
 
-    return {
-      code: HttpStatus.OK,
-      data: result
-    }
+    // return {
+    //   code: HttpStatus.OK,
+    //   data: result
+    // }
+    return { orders: result };
   }
 
 }
