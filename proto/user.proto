@@ -4,8 +4,9 @@ package user;
 
 service UserService {
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
-    rpc GetUsers (GetUsersRequest) returns (CreateUserResponse);
+    rpc GetUsers (GetUserRequest) returns (CreateUserResponse);
     rpc GetUser (GetUserRequest) returns (CreateUserResponse);
+    rpc Login (GetUserRequest) returns (LoginResponse);
 }
 
 message CreateUserRequest {
@@ -31,8 +32,11 @@ message CreateUserResponse {
     repeated ResponseOrder orders = 4;
 }
 
-message GetUsersRequest {}
-
 message GetUserRequest {
     string userId = 1;
+    optional string pwd = 2;
+}
+
+message LoginResponse {
+    string token = 1;
 }

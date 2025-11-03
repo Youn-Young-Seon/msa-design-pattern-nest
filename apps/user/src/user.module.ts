@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserEntity } from './domain/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
-import { BearerTokenMiddleware } from './middleware/bearer-token.middleware';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { ORDER_SERVICE_NAME } from '@app/common/grpc/proto/order';
@@ -48,17 +47,7 @@ import { ORDER_SERVICE_NAME } from '@app/common/grpc/proto/order';
       }
     ])
   ],
-  controllers: [
-    UserController
-  ],
-  providers: [
-    UserService
-  ],
+  controllers: [UserController],
+  providers: [UserService],
 })
-export class UserModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(BearerTokenMiddleware)
-      .forRoutes('*');
-  }
-}
+export class UserModule { }

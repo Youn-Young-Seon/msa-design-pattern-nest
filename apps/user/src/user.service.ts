@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, Logger, UnauthorizedException } from '
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './domain/user.entity';
 import { Repository } from 'typeorm';
-import { HttpService } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { UserDto } from './dto/user.dto';
 import { randomUUID } from 'crypto';
@@ -68,7 +67,11 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const passwordValid = bcrypt.compare(userDto.pwd, user.encryptedPwd);
+    this.logger.log(`user: ${JSON.stringify(user)}`)
+
+    const passwordValid = await bcrypt.compare(userDto.pwd, user.encryptedPwd);
+
+    this.logger.log(`passwordValid: ${passwordValid}`);
 
     if (!passwordValid) {
       throw new UnauthorizedException('Invalid credentials');

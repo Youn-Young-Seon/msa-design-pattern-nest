@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { UserModule } from './user.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { UserMicroservice } from '@app/common/grpc/proto';
 
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
@@ -9,7 +10,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
-      package: 'user',
+      package: UserMicroservice.protobufPackage,
       protoPath: join(process.cwd(), 'proto', 'user.proto'),
       url: '127.0.0.1:1338'
     }

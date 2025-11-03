@@ -33,11 +33,13 @@ export interface CreateUserResponse_ResponseOrder {
   orderId: string;
 }
 
-export interface GetUsersRequest {
-}
-
 export interface GetUserRequest {
   userId: string;
+  pwd?: string | undefined;
+}
+
+export interface LoginResponse {
+  token: string;
 }
 
 export const USER_PACKAGE_NAME = "user";
@@ -45,9 +47,11 @@ export const USER_PACKAGE_NAME = "user";
 export interface UserServiceClient {
   createUser(request: CreateUserRequest, metadata?: Metadata): Observable<CreateUserResponse>;
 
-  getUsers(request: GetUsersRequest, metadata?: Metadata): Observable<CreateUserResponse>;
+  getUsers(request: GetUserRequest, metadata?: Metadata): Observable<CreateUserResponse>;
 
   getUser(request: GetUserRequest, metadata?: Metadata): Observable<CreateUserResponse>;
+
+  login(request: GetUserRequest, metadata?: Metadata): Observable<LoginResponse>;
 }
 
 export interface UserServiceController {
@@ -57,7 +61,7 @@ export interface UserServiceController {
   ): Promise<CreateUserResponse> | Observable<CreateUserResponse> | CreateUserResponse;
 
   getUsers(
-    request: GetUsersRequest,
+    request: GetUserRequest,
     metadata?: Metadata,
   ): Promise<CreateUserResponse> | Observable<CreateUserResponse> | CreateUserResponse;
 
@@ -65,11 +69,16 @@ export interface UserServiceController {
     request: GetUserRequest,
     metadata?: Metadata,
   ): Promise<CreateUserResponse> | Observable<CreateUserResponse> | CreateUserResponse;
+
+  login(
+    request: GetUserRequest,
+    metadata?: Metadata,
+  ): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
 }
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createUser", "getUsers", "getUser"];
+    const grpcMethods: string[] = ["createUser", "getUsers", "getUser", "login"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);

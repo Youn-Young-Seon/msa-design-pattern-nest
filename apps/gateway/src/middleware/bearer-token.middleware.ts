@@ -25,6 +25,6 @@ export class BearerTokenMiddleware implements NestMiddleware {
     private verifyToken(token: string) {
         const rawToken = token.startsWith('Bearer ') ? token.slice(7) : token;
 
-        return jwt.verify(rawToken, process.env.TOKEN_SECRET);
+        return jwt.verify(rawToken, "user_token_test_for_jwt_token_20250328");
     }
 }

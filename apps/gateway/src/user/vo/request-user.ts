@@ -1,17 +1,17 @@
 
-import { IsEmail, IsNotEmpty, Length } from "class-validator";
+import { IsEmail, IsEmpty, Length } from "class-validator";
 
 export class RequestUser {
-    @IsNotEmpty({ message: 'Email cannot be null' })
+    @IsEmpty({ message: 'Email cannot be null' })
     @Length(2, Infinity, { message: 'Email not be less than two characters' })
     @IsEmail()
     email: string;
 
-    @IsNotEmpty({ message: 'Name cannot be null' })
+    @IsEmpty({ message: 'Name cannot be null' })
     @Length(2, Infinity, { message: 'Name not be less than two characters' })
     name: string;
 
-    @IsNotEmpty({ message: 'Password cannot be null' })
+    @IsEmpty({ message: 'Password cannot be null' })
     @Length(8, Infinity, { message: 'Password must be equals or grater than 8 characters' })
     pwd: string;
 }
